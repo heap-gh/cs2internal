@@ -1,5 +1,8 @@
-#include "includes.h"
 
+#include "includes.h"
+#include "client.h"
+
+Client* client = new Client();
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -10,8 +13,6 @@ ID3D11Device* pDevice = NULL;
 ID3D11DeviceContext* pContext = NULL;
 ID3D11RenderTargetView* mainRenderTargetView;
 
-
-
 void InitImGui()
 {
 	ImGui::CreateContext();
@@ -20,7 +21,6 @@ void InitImGui()
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX11_Init(pDevice, pContext);
 }
-
 
 
 LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -33,11 +33,26 @@ LRESULT __stdcall WndProc(const HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 
 
 
+void RenderUI() {
+
+
+	ImGui::Begin("ImGui Window");
+
+
+
+
+
+	ImGui::End();
+
+
+}
+
+
+
 bool init = false;
 HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 {
 
-	
 	if (!init)
 	{
 		if (SUCCEEDED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)& pDevice)))
@@ -59,17 +74,25 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 			return oPresent(pSwapChain, SyncInterval, Flags);
 	}
 
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	if (client->client_ui->show) {
 
-	ImGui::Begin("ImGui Window");
-	ImGui::End();
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 
-	ImGui::Render();
+		ImGui::Begin("ImGui Window", &client->client_ui->show);
 
-	pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		RenderUI();
+
+		ImGui::End();
+
+		ImGui::Render();
+
+		pContext->OMSetRenderTargets(1, &mainRenderTargetView, NULL);
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	}
+
 	return oPresent(pSwapChain, SyncInterval, Flags);
 }
 
@@ -77,6 +100,13 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
+
+	bool console_window = AllocConsole();
+	FILE* f;
+	freopen_s(&f, "CONOUT$", "w", stdout);
+
+	client->init();
+
 	bool init_hook = false;
 	do
 	{
@@ -86,6 +116,10 @@ DWORD WINAPI MainThread(LPVOID lpReserved)
 			init_hook = true;
 		}
 	} while (!init_hook);
+
+	client->start();
+
+
 	return TRUE;
 }
 

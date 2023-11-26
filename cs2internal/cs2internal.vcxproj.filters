@@ -52,6 +52,9 @@
     <Filter Include="Header Files\minhook\src\hde">
       <UniqueIdentifier>{57ee4302-b91c-48a4-9841-36b14e3a3cdc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\structs">
+      <UniqueIdentifier>{dec02317-9a71-430e-919e-907620ee0e95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="imgui\imconfig.h">
@@ -108,6 +111,12 @@
     <ClInclude Include="includes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="client_ui.h">
+      <Filter>Header Files\structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui\imgui_widgets.cpp">
@@ -147,6 +156,9 @@
       <Filter>Source Files\minhook\src\hde</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
