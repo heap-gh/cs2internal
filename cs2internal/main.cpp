@@ -101,6 +101,8 @@ HRESULT __stdcall hkPresent(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT 
 DWORD WINAPI MainThread(LPVOID lpReserved)
 {
 
+	// test
+
 	bool console_window = AllocConsole();
 	FILE* f;
 	freopen_s(&f, "CONOUT$", "w", stdout);
